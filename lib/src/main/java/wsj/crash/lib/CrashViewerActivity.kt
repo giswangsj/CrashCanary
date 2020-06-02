@@ -1,15 +1,11 @@
-package per.wsj.crashcanary
+package wsj.crash.lib
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class MainActivity : AppCompatActivity() {
+class CrashViewerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        var i = 0
-
-        val j = 100/i
+        setContentView(R.layout.activity_crash_viewer)
     }
 }
