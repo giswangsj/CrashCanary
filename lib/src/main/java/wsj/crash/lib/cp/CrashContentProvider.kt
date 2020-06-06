@@ -1,9 +1,10 @@
-package wsj.crash.lib
+package wsj.crash.lib.cp
 
 import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
+import wsj.crash.lib.util.CrashHandler
 
 class CrashContentProvider : ContentProvider() {
 

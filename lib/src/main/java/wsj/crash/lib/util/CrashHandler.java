@@ -1,4 +1,4 @@
-package wsj.crash.lib;
+package wsj.crash.lib.util;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -24,9 +24,13 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import wsj.crash.lib.db.DbManager;
 
 
 public class CrashHandler implements UncaughtExceptionHandler {
@@ -89,7 +93,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             }
 
             // 退出程序
-            System.exit(0);
+            System.exit(1);
         }
     }
 
@@ -116,7 +120,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
             }
         }.start();
         // 保存日志文件
-        saveCatchInfo2File(ex);
+        saveCatchInfo2Db(ex);
+//        saveCatchInfo2File(ex);
         return true;
     }
 
@@ -151,6 +156,44 @@ public class CrashHandler implements UncaughtExceptionHandler {
     }
 
     /**
+     * 保存错误信息到数据库
+     *
+     * @param ex
+     * @return 返回文件名称, 便于将文件传送到服务器
+     */
+    public void saveCatchInfo2Db(Throwable ex) {
+        for (Map.Entry<String, String> entry : infos.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            Log.e(TAG, key + "=" + value + "\n");
+        }
+
+        Writer writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        ex.printStackTrace(printWriter);
+        Throwable cause = ex.getCause();
+        while (cause != null) {
+            cause.printStackTrace(printWriter);
+            cause = cause.getCause();
+        }
+        printWriter.close();
+        String result = writer.toString();
+
+        try {
+            long timestamp = System.currentTimeMillis();
+            Log.e(TAG, "err:---" + result);
+            List<Object> data = new ArrayList<>();
+            data.add(result);
+            data.add(timestamp);
+            DbManager.getInstance(mContext).insert(data.toArray());
+
+        } catch (Exception e) {
+            Log.e(TAG, "an error occured while writing file...", e);
+        }
+    }
+
+    /**
      * 保存错误信息到文件中
      *
      * @param ex
@@ -159,10 +202,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
     public String saveCatchInfo2File(Throwable ex) {
         StringBuffer sb = new StringBuffer();
         sb.append("\n");
+        Log.e(TAG, "---------------------------------------------");
         for (Map.Entry<String, String> entry : infos.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
             sb.append(key + "=" + value + "\n");
+
+            Log.e(TAG, key + "=" + value + "\n");
         }
 
         Writer writer = new StringWriter();
@@ -181,7 +227,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
             String time = formatter.format(new Date());
             String fileName = FILE_NAME + "-" + time + "-" + timestamp + ".log";
 
-
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 String path = Environment.getExternalStoragePublicDirectory(Environment
                         .DIRECTORY_DOWNLOADS) + "/" + FOLDER_NAME + "/";
@@ -196,7 +241,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
                 fos.write(sb.toString().getBytes());
                 // 发送给开发人员
-                sendCrashLog2PM(path + fileName);
+//                sendCrashLog2PM(path + fileName);
                 fos.close();
             }
             return fileName;
