@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import wsj.crash.lib.R;
 import wsj.crash.lib.db.DbManager;
 
 
@@ -91,7 +92,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
             } catch (InterruptedException e) {
                 Log.e(TAG, "error : ", e);
             }
-
             // 退出程序
             System.exit(1);
         }
@@ -191,6 +191,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             data.add(timestamp);
             DbManager.getInstance(mContext).insert(data.toArray());
 
+            NotificationUtil.createNotification(mContext, "崩溃了", "点击查看");
         } catch (Exception e) {
             Log.e(TAG, "an error occured while writing file...", e);
         }
