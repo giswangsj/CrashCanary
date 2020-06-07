@@ -28,7 +28,7 @@ public class DbManager {
      **/
     public void insert(Object[] data) {
         Log.i("TAG:", "插入数据到数据库表：person中:" + data.toString());
-        String sql = "insert into crash (info , time) values ( ? , ?)";
+        String sql = "insert into crash (profile, detail , time) values ( ? , ? , ?)";
         Object[] bindArgs = data;
         dbProvider.updateSQLite(sql, bindArgs);
     }
@@ -38,8 +38,19 @@ public class DbManager {
      **/
     public ArrayList<HashMap<String, String>> queryAll() {
         ArrayList<HashMap<String, String>> list = new ArrayList<>();
-        String sql = "select * from crash";
+        String sql = "select * from crash order by id desc";
         list = dbProvider.querySQLite(sql, null);
+        Log.i("TAG:", "查询完毕，返回数据：" + list.size());
+        return list;
+    }
+
+    /**
+     * 【模糊查询】
+     **/
+    public ArrayList<HashMap<String, String>> queryById(int id) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        String sql = "select * from crash where id = ?";
+        list.addAll(dbProvider.querySQLite(sql, new String[]{String.valueOf(id)}));
         Log.i("TAG:", "查询完毕，返回数据：" + list.size());
         return list;
     }
@@ -59,6 +70,14 @@ public class DbManager {
         }
         Log.i("TAG:", "查询完毕，返回数据：" + list.size());
         return list;
+    }
+
+    /**
+     * 【删除数据】
+     **/
+    public void deleteById(int id) {
+        String sql = "delete from crash where id =  ? ";
+        dbProvider.updateSQLite(sql, new String[]{String.valueOf(id)});
     }
 
     /**

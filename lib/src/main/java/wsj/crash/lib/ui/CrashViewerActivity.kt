@@ -2,6 +2,7 @@ package wsj.crash.lib.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_crash_viewer.*
@@ -18,25 +19,31 @@ class CrashViewerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crash_viewer)
 
-        initData()
         initView()
+        initData()
     }
 
     private fun initView() {
         adapter = LogAdapter(this, mData)
+        adapter.setOnDeleteListener {
+            DbManager.getInstance(this).deleteById(it)
+            initData()
+        }
         rvLog.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvLog.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         rvLog.adapter = adapter
     }
 
     private fun initData() {
-        val query = DbManager.getInstance(this).query(null, null)
+        val query = DbManager.getInstance(this).queryAll()
+        mData.clear()
         for (hashMap in query) {
             val item = LogBean()
             item.id = hashMap["id"]!!.toInt()
-            item.info = hashMap["info"]!!.substring(0, 160)
+            item.info = hashMap["profile"]
             item.time = hashMap["time"]!!.toLong()
             mData.add(item)
         }
+        adapter.notifyDataSetChanged()
     }
 }

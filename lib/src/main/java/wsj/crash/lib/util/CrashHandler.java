@@ -162,11 +162,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * @return 返回文件名称, 便于将文件传送到服务器
      */
     public void saveCatchInfo2Db(Throwable ex) {
+        StringBuffer sb = new StringBuffer();
         for (Map.Entry<String, String> entry : infos.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-
-            Log.e(TAG, key + "=" + value + "\n");
+            sb.append(key + "=" + value + "\n");
         }
 
         Writer writer = new StringWriter();
@@ -179,12 +179,15 @@ public class CrashHandler implements UncaughtExceptionHandler {
         }
         printWriter.close();
         String result = writer.toString();
+        sb.append("\n");
+        sb.append(result);
 
         try {
             long timestamp = System.currentTimeMillis();
             Log.e(TAG, "err:---" + result);
             List<Object> data = new ArrayList<>();
-            data.add(result);
+            data.add(result.substring(0, 160));
+            data.add(sb.toString());
             data.add(timestamp);
             DbManager.getInstance(mContext).insert(data.toArray());
 

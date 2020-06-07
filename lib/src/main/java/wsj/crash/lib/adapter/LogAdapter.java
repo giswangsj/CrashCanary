@@ -16,12 +16,15 @@ import java.util.Locale;
 
 import wsj.crash.lib.R;
 import wsj.crash.lib.bean.LogBean;
+import wsj.crash.lib.db.DbManager;
 import wsj.crash.lib.ui.CrashInfoActivity;
 
 public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 
     private List<LogBean> mData;
     private Context mContext;
+
+    private OnDeleteListener mOnDeleteListener;
 
     public LogAdapter(Context context, List<LogBean> data) {
         this.mContext = context;
@@ -48,6 +51,15 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
                 mContext.startActivity(intent);
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mOnDeleteListener != null) {
+                    mOnDeleteListener.onDelete(item.getId());
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -63,6 +75,14 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
     public static String ts2Str(long time) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE);
         return sdf.format(time);
+    }
+
+    public void setOnDeleteListener(OnDeleteListener mOnDeleteListener) {
+        this.mOnDeleteListener = mOnDeleteListener;
+    }
+
+    public interface OnDeleteListener {
+        void onDelete(int id);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
