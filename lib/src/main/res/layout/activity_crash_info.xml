@@ -4,11 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.CrashViewerActivity">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvLog"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    tools:context=".ui.CrashInfoActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

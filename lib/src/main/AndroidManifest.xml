@@ -3,9 +3,11 @@
     package="wsj.crash.lib">
 
     <application>
-        <activity android:name=".CrashViewerActivity"
-            android:launchMode="singleInstance"
-            android:label="Viewer">
+        <activity android:name=".ui.CrashInfoActivity"></activity>
+        <activity
+            android:name=".ui.CrashViewerActivity"
+            android:icon="@mipmap/ic_crash_icon"
+            android:taskAffinity="wsj.crash.lib">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

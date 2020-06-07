@@ -45,25 +45,17 @@ class DbProvider {
 
         /**Cursor是结果集游标，使用Cursou.moveToNext()方法可以从当前行移动到下一行**/
         Cursor cursor = sqLiteDatabase.rawQuery(sql, bindArgs);
-        int clos_len = cursor.getColumnCount();                 //获取数据所有列数
-
+        int clo_len = cursor.getColumnCount();                 //获取数据所有列数
 //        Log.i("TAG:", "querySQLite()方法中获得总列数clos_len：" + clos_len);
-
-        boolean isfals = cursor.moveToNext();
-//        Log.i("TAG:", "isfals值为：" + isfals);
-
         while (cursor.moveToNext()) {                            //循环表格中的每一行
 //            Log.i("TAG:", "进入到while循环中");
             HashMap<String, String> map = new HashMap<>();
-            for (int i = 0; i < clos_len; i++) {                      //循环表格中的每一列
+            for (int i = 0; i < clo_len; i++) {                      //循环表格中的每一列
                 String clos_name = cursor.getColumnName(i);     //从给定的索引i返回列名
                 String clos_value = cursor.getString(cursor.getColumnIndex(clos_name));//返回指定的名称，没有就返回-1
                 if (clos_value == null) {
                     clos_value = "";
                 }
-//                Log.i("TAG:", "while循环下面的for循环拿到的数据clos_value为："
-//                        + cursor.getString(cursor.getColumnIndex(clos_name)));
-
                 map.put(clos_name, clos_value);
             }
             list.add(map);
