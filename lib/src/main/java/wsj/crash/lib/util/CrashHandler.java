@@ -93,7 +93,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 Log.e(TAG, "error : ", e);
             }
             // 退出程序
-            System.exit(1);
+            System.exit(0);
         }
     }
 

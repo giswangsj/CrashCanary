@@ -27,7 +27,7 @@ public class DbManager {
      * 【插入数据】
      **/
     public void insert(Object[] data) {
-        Log.i("TAG:", "插入数据到数据库表：person中:" + data.toString());
+//        Log.i("TAG:", "插入数据到数据库表：person中:" + data.toString());
         String sql = "insert into crash (profile, detail , time) values ( ? , ? , ?)";
         Object[] bindArgs = data;
         dbProvider.updateSQLite(sql, bindArgs);
@@ -40,7 +40,7 @@ public class DbManager {
         ArrayList<HashMap<String, String>> list = new ArrayList<>();
         String sql = "select * from crash order by id desc";
         list = dbProvider.querySQLite(sql, null);
-        Log.i("TAG:", "查询完毕，返回数据：" + list.size());
+//        Log.i("TAG:", "查询完毕，返回数据：" + list.size());
         return list;
     }
 
@@ -51,7 +51,7 @@ public class DbManager {
         ArrayList<HashMap<String, String>> list = new ArrayList<>();
         String sql = "select * from crash where id = ?";
         list.addAll(dbProvider.querySQLite(sql, new String[]{String.valueOf(id)}));
-        Log.i("TAG:", "查询完毕，返回数据：" + list.size());
+//        Log.i("TAG:", "查询完毕，返回数据：" + list.size());
         return list;
     }
 
@@ -68,7 +68,7 @@ public class DbManager {
             where2 = "%" + where2 + "%";
             list = dbProvider.querySQLite(sql, new String[]{where1, where2});
         }
-        Log.i("TAG:", "查询完毕，返回数据：" + list.size());
+//        Log.i("TAG:", "查询完毕，返回数据：" + list.size());
         return list;
     }
 
