@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="wsj.crash.lib">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application>
         <activity android:name=".ui.CrashInfoActivity"></activity>
         <activity
@@ -14,6 +15,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.MyService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":crashcanary"></service>
 
         <provider
             android:name=".cp.CrashContentProvider"

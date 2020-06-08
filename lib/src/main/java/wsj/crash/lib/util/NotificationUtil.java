@@ -44,7 +44,7 @@ public class NotificationUtil {
     public static void createNotification(Context context, String title, String content) {
         initNotificationManager(context);
 
-        NotificationCompat.Builder builder = initBaseBuilder(context, title, content, R.mipmap.ic_crash_icon);
+        NotificationCompat.Builder builder = initBaseBuilder(context, title, content, false);
         Intent intent = new Intent(context, CrashViewerActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(contentIntent);
@@ -52,6 +52,12 @@ public class NotificationUtil {
         notificationManager.notify(0, builder.build());
     }
 
+    public static Notification createNotification(Context context) {
+        initNotificationManager(context);
+
+        NotificationCompat.Builder builder = initBaseBuilder(context, "CrashCanary", "正在检测程序运行异常", true);
+        return builder.build();
+    }
 
     /**
      * 初始化Builder
@@ -59,35 +65,31 @@ public class NotificationUtil {
      * @param context
      * @param title
      * @param content
-     * @param icon
      * @return
      */
-    private static NotificationCompat.Builder initBaseBuilder(Context context, String title, String content, int icon) {
+    private static NotificationCompat.Builder initBaseBuilder(Context context, String title, String content, boolean slient) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-            channel.canBypassDnd();//可否绕过请勿打扰模式
-            channel.enableLights(true); // 闪光
-            channel.setLightColor(Color.RED);   // 闪光时的灯光颜色
-            channel.canShowBadge();         // 桌面launcher显示角标
-            channel.enableVibration(true);  // 是否震动
-            channel.shouldShowLights();//是否会闪光
+//            channel.canBypassDnd();//可否绕过请勿打扰模式
+//            channel.enableLights(!slient); // 闪光
+//            if (!slient) {
+//                channel.setLightColor(Color.RED);   // 闪光时的灯光颜色
+//                channel.canShowBadge();         // 桌面launcher显示角标
+//                channel.shouldShowLights();//是否会闪光
+//            }
+//            channel.enableVibration(!slient);  // 是否震动
+//            channel.enableVibration(false);
             notificationManager.createNotificationChannel(channel);
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(content)
-//                .setSmallIcon(icon)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), icon))
+                .setSmallIcon(R.mipmap.ic_crash_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_crash_icon))
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setSmallIcon(R.mipmap.ic_crash_icon);
-        } else {
-            builder.setSmallIcon(icon);
-        }
         return builder;
     }
 }

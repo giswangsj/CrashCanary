@@ -2,8 +2,11 @@ package wsj.crash.lib.cp
 
 import android.content.ContentProvider
 import android.content.ContentValues
+import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
+import wsj.crash.lib.service.MyService
 import wsj.crash.lib.util.CrashHandler
 
 class CrashContentProvider : ContentProvider() {
@@ -22,6 +25,9 @@ class CrashContentProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
         CrashHandler.getInstance().init(context)
+        if (Build.VERSION.SDK_INT >= 26)
+            context?.startForegroundService(Intent(context, MyService::class.java))
+        else context?.startService(Intent(context, MyService::class.java))
         return true
     }
 
