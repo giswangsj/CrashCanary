@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.util.SparseArray;
 
 import androidx.core.app.NotificationCompat;
@@ -70,26 +71,25 @@ public class NotificationUtil {
     private static NotificationCompat.Builder initBaseBuilder(Context context, String title, String content, boolean slient) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-//            channel.canBypassDnd();//可否绕过请勿打扰模式
-//            channel.enableLights(!slient); // 闪光
-//            if (!slient) {
-//                channel.setLightColor(Color.RED);   // 闪光时的灯光颜色
-//                channel.canShowBadge();         // 桌面launcher显示角标
-//                channel.shouldShowLights();//是否会闪光
-//            }
-//            channel.enableVibration(!slient);  // 是否震动
-//            channel.enableVibration(false);
+            channel.canBypassDnd();//可否绕过请勿打扰模式
+            channel.enableLights(true); // 闪光
+            channel.setLightColor(Color.RED);   // 闪光时的灯光颜色
+            channel.canShowBadge();         // 桌面launcher显示角标
+            channel.shouldShowLights();//是否会闪光
+            channel.enableVibration(true);  // 是否震动
             notificationManager.createNotificationChannel(channel);
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(content)
-                .setSmallIcon(R.mipmap.ic_crash_icon)
+                .setSmallIcon(R.mipmap.small_icon)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_crash_icon))
-                .setDefaults(Notification.DEFAULT_ALL)
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis());
+        if (!slient) {
+            builder.setDefaults(Notification.DEFAULT_ALL);
+        }
         return builder;
     }
 }
