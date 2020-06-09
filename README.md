@@ -5,7 +5,7 @@
 
 [English](./README_EN.md)
 
-CrashCanary是一个无侵入的安卓崩溃日志记录库，对你的代码没有任务侵入性，无需申请权限，只需要添加依赖，即可在程序崩溃时记录崩溃日志并可查看所有日志。
+`CrashCanary`是一个无侵入的安卓崩溃日志记录库，对你的代码没有任务侵入性，无需申请权限，只需要添加依赖，即可在程序崩溃时记录崩溃日志并可查看所有日志。
 
 ## Preview
 
@@ -27,8 +27,10 @@ CrashCanary是一个无侵入的安卓崩溃日志记录库，对你的代码没
 **Step 2.** Add the dependency
 
 ```groovy
-debugImplementation  'com.github.giswangsj:CrashCanary:1.0.0'
+debugImplementation  'com.github.giswangsj:CrashCanary:1.0.1'
 ```
+
+通过`debugImplementation`方式添加依赖只在debug模式生效，release模式不会生效。
 
 ## Usage
 
@@ -41,3 +43,9 @@ debugImplementation  'com.github.giswangsj:CrashCanary:1.0.0'
 
 
 记录列表中可以长按item删除该日志。
+
+
+
+## License
+
+`CrashCanary` is released under the Apache License version 2.0.
