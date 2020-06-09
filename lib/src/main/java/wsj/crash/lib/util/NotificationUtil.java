@@ -72,11 +72,11 @@ public class NotificationUtil {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             channel.canBypassDnd();//可否绕过请勿打扰模式
-            channel.enableLights(true); // 闪光
             channel.setLightColor(Color.RED);   // 闪光时的灯光颜色
             channel.canShowBadge();         // 桌面launcher显示角标
             channel.shouldShowLights();//是否会闪光
-            channel.enableVibration(true);  // 是否震动
+            channel.enableLights(!slient); // 闪光
+            channel.enableVibration(!slient);  // 是否震动
             notificationManager.createNotificationChannel(channel);
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
