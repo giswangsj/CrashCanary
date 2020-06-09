@@ -9,7 +9,7 @@ CrashCanary是一个无侵入的安卓崩溃日志记录库，对你的代码没
 
 ## Preview
 
-![preview](https://wangsj.oss-cn-shanghai.aliyuncs.com/img/crash_canary.gif)
+![preview](https://wangsj.oss-cn-shanghai.aliyuncs.com/img/crash_canary_preview.gif)
 
 ## Implementation
 
