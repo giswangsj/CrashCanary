@@ -57,6 +57,10 @@ public class NotificationUtil {
         initNotificationManager(context);
 
         NotificationCompat.Builder builder = initBaseBuilder(context, "CrashCanary", "正在检测程序运行异常", true);
+        Intent intent = new Intent(context, CrashViewerActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.setContentIntent(contentIntent);
+
         return builder.build();
     }
 

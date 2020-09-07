@@ -36,10 +36,10 @@ debugImplementation  'com.github.giswangsj:CrashCanary:1.0.1'
 
 添加完对`CrashCanary`的依赖后无需添加任何代码，是的，你没看错，就是真么0浸入。
 
-一旦你的应用发生异常崩溃，可以进入和你应用同名的图标为`CrashCanary`的另一个应用，查看崩溃日志。
+一旦你的应用发生异常崩溃，可以进入和你应用同名的图标为`CrashCanary`的入口，查看崩溃日志。
 
-![enterance](img/enterance.png)![enterance](img/log_list.png)
-
+![enterance](img/enterance.png)![list](img/log_list.png)
+![detail](img/detail.png)
 
 
 记录列表中可以长按item删除该日志。

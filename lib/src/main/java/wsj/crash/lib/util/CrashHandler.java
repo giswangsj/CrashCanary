@@ -39,8 +39,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
     public static final String TAG = "CrashHandler";
     // CrashHandler实例
     private static CrashHandler instance;
-    private final String FILE_NAME = "gitstar";
-    private final String FOLDER_NAME = "gitstar";
     // 系统默认的UncaughtException处理类
     private UncaughtExceptionHandler mDefaultHandler;
     // 程序的Context对象
@@ -195,64 +193,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
         } catch (Exception e) {
             Log.e(TAG, "an error occured while writing file...", e);
         }
-    }
-
-    /**
-     * 保存错误信息到文件中
-     *
-     * @param ex
-     * @return 返回文件名称, 便于将文件传送到服务器
-     */
-    public String saveCatchInfo2File(Throwable ex) {
-        StringBuffer sb = new StringBuffer();
-        sb.append("\n");
-        Log.e(TAG, "---------------------------------------------");
-        for (Map.Entry<String, String> entry : infos.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            sb.append(key + "=" + value + "\n");
-
-            Log.e(TAG, key + "=" + value + "\n");
-        }
-
-        Writer writer = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(writer);
-        ex.printStackTrace(printWriter);
-        Throwable cause = ex.getCause();
-        while (cause != null) {
-            cause.printStackTrace(printWriter);
-            cause = cause.getCause();
-        }
-        printWriter.close();
-        String result = writer.toString();
-        sb.append(result);
-        try {
-            long timestamp = System.currentTimeMillis();
-            String time = formatter.format(new Date());
-            String fileName = FILE_NAME + "-" + time + "-" + timestamp + ".log";
-
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                String path = Environment.getExternalStoragePublicDirectory(Environment
-                        .DIRECTORY_DOWNLOADS) + "/" + FOLDER_NAME + "/";
-                File dir = new File(path);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                FileOutputStream fos = new FileOutputStream(path + fileName);
-                // 追加方式写文件
-                // FileOutputStream fos = new FileOutputStream(path +
-                // fileName,true);
-
-                fos.write(sb.toString().getBytes());
-                // 发送给开发人员
-//                sendCrashLog2PM(path + fileName);
-                fos.close();
-            }
-            return fileName;
-        } catch (Exception e) {
-            Log.e(TAG, "an error occured while writing file...", e);
-        }
-        return null;
     }
 
     /**

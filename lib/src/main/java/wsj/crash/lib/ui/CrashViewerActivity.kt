@@ -2,6 +2,7 @@ package wsj.crash.lib.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,10 @@ class CrashViewerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_crash_viewer)
 
         initView()
+    }
+
+    override fun onResume() {
+        super.onResume()
         initData()
     }
 
@@ -44,6 +49,13 @@ class CrashViewerActivity : AppCompatActivity() {
             item.time = hashMap["time"]!!.toLong()
             mData.add(item)
         }
-        adapter.notifyDataSetChanged()
+        if (mData.isEmpty()) {
+            tvEmpty.visibility = View.VISIBLE
+            rvLog.visibility = View.GONE
+        } else {
+            tvEmpty.visibility = View.GONE
+            rvLog.visibility = View.VISIBLE
+            adapter.notifyDataSetChanged()
+        }
     }
 }
