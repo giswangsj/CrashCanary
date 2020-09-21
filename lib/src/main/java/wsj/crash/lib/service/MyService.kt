@@ -8,6 +8,9 @@ import wsj.crash.lib.util.NotificationUtil
 /**
  * do nothing, just keep app run
  */
+
+const val NOTIFICATION_ID = 444
+
 class MyService : Service() {
 
     override fun onBind(intent: Intent): IBinder? {
@@ -15,7 +18,7 @@ class MyService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(1, NotificationUtil.createNotification(this))
+        startForeground(NOTIFICATION_ID, NotificationUtil.createNotification(this))
         return super.onStartCommand(intent, flags, startId)
     }
 }
