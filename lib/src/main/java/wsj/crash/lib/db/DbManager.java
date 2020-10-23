@@ -1,7 +1,6 @@
 package wsj.crash.lib.db;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,11 +25,24 @@ public class DbManager {
     /**
      * 【插入数据】
      **/
-    public void insert(Object[] data) {
+    public long insert(Object[] data) {
 //        Log.i("TAG:", "插入数据到数据库表：person中:" + data.toString());
         String sql = "insert into crash (profile, detail , time) values ( ? , ? , ?)";
         Object[] bindArgs = data;
-        dbProvider.updateSQLite(sql, bindArgs);
+        boolean result = dbProvider.execSQLite(sql, bindArgs);
+        // query id if success
+        if (result) {
+            String sql2 = "select id from crash ORDER BY id desc LIMIT 1";
+            ArrayList<HashMap<String, String>> hashMaps = dbProvider.querySQLite(sql2, new String[]{});
+            String id = hashMaps.get(0).get("id");
+            try {
+                return Long.parseLong(id);
+            } catch (Exception e) {
+                return -1;
+            }
+        } else {
+            return -1;
+        }
     }
 
     /**
@@ -77,7 +89,7 @@ public class DbManager {
      **/
     public void deleteById(int id) {
         String sql = "delete from crash where id =  ? ";
-        dbProvider.updateSQLite(sql, new String[]{String.valueOf(id)});
+        dbProvider.execSQLite(sql, new String[]{String.valueOf(id)});
     }
 
     /**
@@ -85,7 +97,7 @@ public class DbManager {
      **/
     public void delete(Object[] data) {
         String sql = "delete from crash where id =  ? ";
-        dbProvider.updateSQLite(sql, data);
+        dbProvider.execSQLite(sql, data);
     }
 
     /**
@@ -93,6 +105,6 @@ public class DbManager {
      **/
     public void update(Object[] data) {
         String sql = "update crash set info=? , time=? where id=?";
-        dbProvider.updateSQLite(sql, data);
+        dbProvider.execSQLite(sql, data);
     }
 }

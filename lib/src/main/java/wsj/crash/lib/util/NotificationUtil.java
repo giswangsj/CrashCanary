@@ -15,6 +15,7 @@ import android.util.SparseArray;
 import androidx.core.app.NotificationCompat;
 
 import wsj.crash.lib.R;
+import wsj.crash.lib.ui.CrashInfoActivity;
 import wsj.crash.lib.ui.CrashViewerActivity;
 
 
@@ -31,6 +32,16 @@ public class NotificationUtil {
     private static NotificationManager initNotificationManager(Context context) {
         if (notificationManager == null) {
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+                channel.canBypassDnd();//可否绕过请勿打扰模式
+                channel.setLightColor(Color.RED);   // 闪光时的灯光颜色
+                channel.canShowBadge();         // 桌面launcher显示角标
+                channel.shouldShowLights();//是否会闪光
+                channel.enableLights(true); // 闪光
+                channel.enableVibration(true);  // 是否震动
+                notificationManager.createNotificationChannel(channel);
+            }
         }
         return notificationManager;
     }
@@ -47,7 +58,24 @@ public class NotificationUtil {
 
         NotificationCompat.Builder builder = initBaseBuilder(context, title, content, false);
         Intent intent = new Intent(context, CrashViewerActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(contentIntent);
+
+        notificationManager.notify(0, builder.build());
+    }
+
+    public static void createNotification(Context context, String title, String content, long itemId) {
+        initNotificationManager(context);
+
+        NotificationCompat.Builder builder = initBaseBuilder(context, title, content, false);
+        Intent intent = new Intent(context, CrashInfoActivity.class);
+        if (itemId != -1) {
+            intent.putExtra("id", itemId);
+            //解决PendingIntent的extra数据不准确问题
+            intent.setAction(Long.toString(System.currentTimeMillis()));
+        }
+        // 需要传递参数需设置为：PendingIntent.FLAG_UPDATE_CURRENT
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(contentIntent);
 
         notificationManager.notify(0, builder.build());
@@ -58,7 +86,7 @@ public class NotificationUtil {
 
         NotificationCompat.Builder builder = initBaseBuilder(context, "CrashCanary", "正在检测程序运行异常", true);
         Intent intent = new Intent(context, CrashViewerActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(contentIntent);
 
         return builder.build();
@@ -73,16 +101,6 @@ public class NotificationUtil {
      * @return
      */
     private static NotificationCompat.Builder initBaseBuilder(Context context, String title, String content, boolean slient) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-            channel.canBypassDnd();//可否绕过请勿打扰模式
-            channel.setLightColor(Color.RED);   // 闪光时的灯光颜色
-            channel.canShowBadge();         // 桌面launcher显示角标
-            channel.shouldShowLights();//是否会闪光
-            channel.enableLights(!slient); // 闪光
-            channel.enableVibration(!slient);  // 是否震动
-            notificationManager.createNotificationChannel(channel);
-        }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(content)

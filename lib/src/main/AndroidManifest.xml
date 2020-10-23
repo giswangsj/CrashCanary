@@ -4,7 +4,8 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application>
-        <activity android:name=".ui.CrashInfoActivity"></activity>
+        <activity android:name=".ui.CrashInfoActivity"
+            android:taskAffinity="wsj.crash.lib"/>
         <activity
             android:name=".ui.CrashViewerActivity"
             android:icon="@mipmap/ic_crash_icon"
@@ -20,7 +21,7 @@
             android:name=".service.MyService"
             android:enabled="true"
             android:exported="true"
-            android:process=":crashcanary"></service>
+            android:process=":crashcanary"/>
 
         <provider
             android:name=".cp.CrashContentProvider"

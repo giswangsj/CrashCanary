@@ -187,9 +187,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
             data.add(result.substring(0, 160));
             data.add(sb.toString());
             data.add(timestamp);
-            DbManager.getInstance(mContext).insert(data.toArray());
+            long itemId = DbManager.getInstance(mContext).insert(data.toArray());
 
-            NotificationUtil.createNotification(mContext, "崩溃了", "点击查看");
+            NotificationUtil.createNotification(mContext, "崩溃了", "点击查看", itemId);
         } catch (Exception e) {
             Log.e(TAG, "an error occured while writing file...", e);
         }
